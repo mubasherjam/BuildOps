@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BuildOps.API/BuildOps.API.csproj" />
+  <Project Path="BuildOps.Application/BuildOps.Application.csproj" />
+  <Project Path="BuildOps.Domain/BuildOps.Domain.csproj" />
+  <Project Path="BuildOps.Infrastructure/BuildOps.Infrastructure.csproj" />
+</Solution>
