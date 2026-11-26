@@ -1,14 +1,26 @@
+using BuildOps.Application.Interfaces;
+using BuildOps.Application.Services;
+using BuildOps.Infrastructure;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
+// Register controllers
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+
+// Register OpenAPI
 builder.Services.AddOpenApi();
+
+// Register Infrastructure services
+builder.Services.AddInfrastructure(
+    builder.Configuration);
+
+// Register Application services
+builder.Services.AddScoped<
+    IEquipmentCategoryService,
+    EquipmentCategoryService>();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
