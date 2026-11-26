@@ -1,0 +1,62 @@
+<div class="category-container">
+
+  <h1>{{ pageTitle }}</h1>
+
+  <p>Add a new equipment category to BuildOps.</p>
+
+  <div class="form-group">
+
+    <label for="categoryName">
+      Category Name
+    </label>
+
+    <input
+      id="categoryName"
+      type="text"
+      [(ngModel)]="categoryName"
+      placeholder="Enter category name"
+      maxlength="100"
+    />
+
+  </div>
+
+  <div class="form-group">
+
+    <label for="description">
+      Description
+    </label>
+
+    <textarea
+      id="description"
+      [(ngModel)]="description"
+      placeholder="Enter description"
+      maxlength="500"
+      rows="4"
+    ></textarea>
+
+  </div>
+
+  <div class="actions">
+
+    <button
+      class="reset-button"
+      (click)="resetForm()">
+      Reset
+    </button>
+
+    <button
+      class="create-button"
+      [disabled]="!categoryName.trim()"
+      (click)="createCategory()">
+      Create Category
+    </button>
+
+  </div>
+
+  @if (message) {
+    <div class="message">
+      {{ message }}
+    </div>
+  }
+
+</div>
