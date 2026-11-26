@@ -7,13 +7,14 @@
   <div class="form-group">
 
     <label for="categoryName">
-      Category Name
+      Category Name *
     </label>
 
     <input
       id="categoryName"
       type="text"
       [(ngModel)]="categoryName"
+      [disabled]="isLoading()"
       placeholder="Enter category name"
       maxlength="100"
     />
@@ -29,6 +30,7 @@
     <textarea
       id="description"
       [(ngModel)]="description"
+      [disabled]="isLoading()"
       placeholder="Enter description"
       maxlength="500"
       rows="4"
@@ -40,22 +42,31 @@
 
     <button
       class="reset-button"
+      [disabled]="isLoading()"
       (click)="resetForm()">
       Reset
     </button>
 
     <button
       class="create-button"
-      [disabled]="!categoryName.trim()"
+      [disabled]="isLoading() || !categoryName.trim()"
       (click)="createCategory()">
-      Create Category
+
+      {{ isLoading() ? 'Creating...' : 'Create Category' }}
+
     </button>
 
   </div>
 
-  @if (message) {
-    <div class="message">
-      {{ message }}
+  @if (successMessage()) {
+    <div class="success-message" role="status">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (errorMessage()) {
+    <div class="error-message" role="alert">
+      {{ errorMessage() }}
     </div>
   }
 

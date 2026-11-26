@@ -1,5 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { HttpErrorResponse } from '@angular/common/http';
+import { finalize } from 'rxjs';
+
+import { EquipmentCategoryService } from
+  '../../services/equipment-category.service';
+
+import { CreateEquipmentCategory } from
+  '../../models/equipment-category.model';
 
 @Component({
   selector: 'app-create-category',
@@ -9,28 +17,76 @@ import { FormsModule } from '@angular/forms';
 })
 export class CreateCategory {
 
-  pageTitle: string = 'Create Equipment Category';
+  pageTitle = 'Create Equipment Category';
 
-  categoryName: string = '';
+  categoryName = '';
+  description = '';
 
-  description: string = '';
+  successMessage = signal('');
+  errorMessage = signal('');
+  isLoading = signal(false);
 
-  message: string = '';
+  constructor(
+    private categoryService: EquipmentCategoryService
+  ) {
+  }
 
   createCategory(): void {
 
-    if (!this.categoryName.trim()) {
-      this.message = 'Category name is required.';
+    if (this.isLoading()) {
       return;
     }
 
-    this.message =
-      `Category "${this.categoryName.trim()}" is ready to submit.`;
+    this.successMessage.set('');
+    this.errorMessage.set('');
+
+    if (!this.categoryName.trim()) {
+      this.errorMessage.set('Category name is required.');
+      return;
+    }
+
+    const request: CreateEquipmentCategory = {
+      name: this.categoryName.trim(),
+      description: this.description.trim() || null
+    };
+
+    this.isLoading.set(true);
+
+    this.categoryService.create(request)
+      .pipe(
+        finalize(() => {
+          this.isLoading.set(false);
+        })
+      )
+      .subscribe({
+
+        next: (response) => {
+
+          this.categoryName = '';
+          this.description = '';
+
+          this.successMessage.set(
+            `Category "${response.name}" created successfully.`
+          );
+        },
+
+        error: (error: HttpErrorResponse) => {
+
+          this.errorMessage.set(
+            error.error?.detail ||
+            'Unable to create category. Please try again.'
+          );
+        }
+
+      });
   }
 
   resetForm(): void {
+
     this.categoryName = '';
     this.description = '';
-    this.message = '';
+
+    this.successMessage.set('');
+    this.errorMessage.set('');
   }
 }
