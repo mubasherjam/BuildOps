@@ -7,6 +7,8 @@ using BuildOps.Application.Interfaces;
 using BuildOps.Domain.Entities;
 using BuildOps.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using BuildOps.Application.Exceptions;
+using Microsoft.Data.SqlClient;
 
 namespace BuildOps.Infrastructure.Repositories;
 
@@ -43,7 +45,18 @@ public class EquipmentCategoryRepository
     public async Task<int> SaveChangesAsync(
         CancellationToken cancellationToken = default)
     {
-        return await _context.SaveChangesAsync(
-            cancellationToken);
+        try
+        {
+            return await _context.SaveChangesAsync(
+                cancellationToken);
+        }
+        catch (DbUpdateException ex)
+            when (ex.InnerException is SqlException sqlException
+                  && sqlException.Number is 2601 or 2627)
+        {
+            throw new DuplicateEquipmentCategoryException(
+                "An equipment category with this name already exists.",
+                ex);
+        }
     }
 }

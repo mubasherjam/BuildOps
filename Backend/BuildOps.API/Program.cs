@@ -1,25 +1,33 @@
 using BuildOps.Application.Interfaces;
 using BuildOps.Application.Services;
 using BuildOps.Infrastructure;
+using BuildOps.API.ExceptionHandlers;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Register controllers
 builder.Services.AddControllers();
 
-// Register OpenAPI
 builder.Services.AddOpenApi();
 
-// Register Infrastructure services
+// Exception handling registration
+builder.Services.AddProblemDetails();
+
+builder.Services.AddExceptionHandler<
+    GlobalExceptionHandler>();
+
+// Infrastructure registration
 builder.Services.AddInfrastructure(
     builder.Configuration);
 
-// Register Application services
+// Application registration
 builder.Services.AddScoped<
     IEquipmentCategoryService,
     EquipmentCategoryService>();
 
 var app = builder.Build();
+
+// Exception handling middleware
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

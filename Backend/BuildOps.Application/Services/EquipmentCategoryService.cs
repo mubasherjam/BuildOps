@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-
-using BuildOps.Application.DTOs.EquipmentCategories;
+﻿using BuildOps.Application.DTOs.EquipmentCategories;
 using BuildOps.Application.Interfaces;
+using BuildOps.Application.Exceptions;
 using BuildOps.Domain.Entities;
 
 namespace BuildOps.Application.Services;
@@ -36,7 +32,7 @@ public class EquipmentCategoryService
 
         if (exists)
         {
-            throw new InvalidOperationException(
+            throw new DuplicateEquipmentCategoryException(
                 "An equipment category with this name already exists.");
         }
 
