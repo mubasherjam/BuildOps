@@ -43,6 +43,38 @@ public class EquipmentCategoryService
         await _repository.SaveChangesAsync(
             cancellationToken);
 
+        return MapToDto(category);
+    }
+
+    public async Task<IReadOnlyList<EquipmentCategoryDto>> GetAllAsync(
+    CancellationToken cancellationToken = default)
+    {
+        var categories = await _repository
+            .GetAllAsync(cancellationToken);
+
+        return categories
+            .Select(MapToDto)
+            .ToList();
+    }
+
+    public async Task<EquipmentCategoryDto?> GetByIdAsync(
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        var category = await _repository
+            .GetByIdAsync(id, cancellationToken);
+
+        if (category is null)
+        {
+            return null;
+        }
+
+        return MapToDto(category);
+    }
+
+    private static EquipmentCategoryDto MapToDto(
+        EquipmentCategory category)
+    {
         return new EquipmentCategoryDto
         {
             Id = category.Id,

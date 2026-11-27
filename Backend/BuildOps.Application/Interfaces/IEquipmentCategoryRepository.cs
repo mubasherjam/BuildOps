@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-using BuildOps.Domain.Entities;
+﻿using BuildOps.Domain.Entities;
 
 namespace BuildOps.Application.Interfaces;
 
@@ -17,5 +13,12 @@ public interface IEquipmentCategoryRepository
         CancellationToken cancellationToken = default);
 
     Task<int> SaveChangesAsync(
+        CancellationToken cancellationToken = default);
+
+    Task<IReadOnlyList<EquipmentCategory>> GetAllAsync(
+        CancellationToken cancellationToken = default);
+
+    Task<EquipmentCategory?> GetByIdAsync(
+        int id,
         CancellationToken cancellationToken = default);
 }

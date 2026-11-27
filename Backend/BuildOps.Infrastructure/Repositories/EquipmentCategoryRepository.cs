@@ -59,4 +59,24 @@ public class EquipmentCategoryRepository
                 ex);
         }
     }
+
+    public async Task<IReadOnlyList<EquipmentCategory>> GetAllAsync(
+    CancellationToken cancellationToken = default)
+    {
+        return await _context.EquipmentCategories
+            .AsNoTracking()
+            .OrderByDescending(x => x.Id)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<EquipmentCategory?> GetByIdAsync(
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.EquipmentCategories
+            .AsNoTracking()
+            .FirstOrDefaultAsync(
+                x => x.Id == id,
+                cancellationToken);
+    }
 }
