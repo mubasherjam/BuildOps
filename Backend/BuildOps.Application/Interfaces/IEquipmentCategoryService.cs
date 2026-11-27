@@ -19,4 +19,8 @@ public interface IEquipmentCategoryService
     int id,
     UpdateEquipmentCategoryDto request,
     CancellationToken cancellationToken = default);
+
+    Task<bool> DeleteAsync(
+    int id,
+    CancellationToken cancellationToken = default);
 }

@@ -30,4 +30,6 @@ public interface IEquipmentCategoryRepository
         string name,
         int id,
         CancellationToken cancellationToken = default);
+
+    void Remove(EquipmentCategory category);
 }

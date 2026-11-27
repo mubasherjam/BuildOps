@@ -101,4 +101,9 @@ public class EquipmentCategoryRepository
                 x => x.Name == name && x.Id != id,
                 cancellationToken);
     }
+
+    public void Remove(EquipmentCategory category)
+    {
+        _context.EquipmentCategories.Remove(category);
+    }
 }
