@@ -10,3 +10,12 @@ export interface EquipmentCategory {
   isActive: boolean;
   createdAt: string;
 }
+export interface UpdateEquipmentCategory {
+
+  name: string;
+
+  description: string | null;
+
+  isActive: boolean;
+
+}

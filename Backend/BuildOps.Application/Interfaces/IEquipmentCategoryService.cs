@@ -14,4 +14,9 @@ public interface IEquipmentCategoryService
     Task<EquipmentCategoryDto?> GetByIdAsync(
         int id,
         CancellationToken cancellationToken = default);
+
+    Task<EquipmentCategoryDto?> UpdateAsync(
+    int id,
+    UpdateEquipmentCategoryDto request,
+    CancellationToken cancellationToken = default);
 }

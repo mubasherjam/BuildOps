@@ -79,4 +79,26 @@ public class EquipmentCategoryRepository
                 x => x.Id == id,
                 cancellationToken);
     }
+
+    public async Task<EquipmentCategory?> GetByIdForUpdateAsync(
+    int id,
+    CancellationToken cancellationToken = default)
+    {
+        return await _context.EquipmentCategories
+            .AsTracking()
+            .FirstOrDefaultAsync(
+                x => x.Id == id,
+                cancellationToken);
+    }
+
+    public async Task<bool> ExistsByNameExcludingIdAsync(
+        string name,
+        int id,
+        CancellationToken cancellationToken = default)
+    {
+        return await _context.EquipmentCategories
+            .AnyAsync(
+                x => x.Name == name && x.Id != id,
+                cancellationToken);
+    }
 }

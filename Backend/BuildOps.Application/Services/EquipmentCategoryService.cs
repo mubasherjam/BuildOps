@@ -84,4 +84,44 @@ public class EquipmentCategoryService
             CreatedAt = category.CreatedAt
         };
     }
+
+    public async Task<EquipmentCategoryDto?> UpdateAsync(
+    int id,
+    UpdateEquipmentCategoryDto request,
+    CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(request);
+
+        var category = await _repository
+            .GetByIdForUpdateAsync(
+                id,
+                cancellationToken);
+
+        if (category is null)
+        {
+            return null;
+        }
+
+        category.Update(
+            request.Name,
+            request.Description,
+            request.IsActive);
+
+        var exists = await _repository
+            .ExistsByNameExcludingIdAsync(
+                category.Name,
+                id,
+                cancellationToken);
+
+        if (exists)
+        {
+            throw new DuplicateEquipmentCategoryException(
+                "An equipment category with this name already exists.");
+        }
+
+        await _repository.SaveChangesAsync(
+            cancellationToken);
+
+        return MapToDto(category);
+    }
 }

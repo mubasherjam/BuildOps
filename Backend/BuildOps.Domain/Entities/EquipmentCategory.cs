@@ -5,9 +5,13 @@ namespace BuildOps.Domain.Entities;
 public class EquipmentCategory
 {
     public int Id { get; private set; }
+
     public string Name { get; private set; }
+
     public string? Description { get; private set; }
+
     public bool IsActive { get; private set; }
+
     public DateTime CreatedAt { get; private set; }
 
     private EquipmentCategory()
@@ -18,6 +22,34 @@ public class EquipmentCategory
     public EquipmentCategory(
         string name,
         string? description = null)
+    {
+        Name = ValidateName(name);
+
+        Description = ValidateDescription(description);
+
+        IsActive = true;
+
+        CreatedAt = DateTime.UtcNow;
+    }
+
+    public void Update(
+        string name,
+        string? description,
+        bool isActive)
+    {
+        var validatedName = ValidateName(name);
+
+        var validatedDescription =
+            ValidateDescription(description);
+
+        Name = validatedName;
+
+        Description = validatedDescription;
+
+        IsActive = isActive;
+    }
+
+    private static string ValidateName(string name)
     {
         if (string.IsNullOrWhiteSpace(name))
         {
@@ -33,6 +65,12 @@ public class EquipmentCategory
                 "Category name cannot exceed 100 characters.");
         }
 
+        return name;
+    }
+
+    private static string? ValidateDescription(
+        string? description)
+    {
         description = description?.Trim();
 
         if (description?.Length > 500)
@@ -41,9 +79,6 @@ public class EquipmentCategory
                 "Description cannot exceed 500 characters.");
         }
 
-        Name = name;
-        Description = description;
-        IsActive = true;
-        CreatedAt = DateTime.UtcNow;
+        return description;
     }
 }

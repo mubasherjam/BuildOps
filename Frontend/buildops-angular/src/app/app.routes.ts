@@ -6,6 +6,9 @@ import { CreateCategory } from
 import { CategoryList } from
   './features/equipment/categories/pages/category-list/category-list';
 
+import { EditCategory } from
+  './features/equipment/categories/pages/edit-category/edit-category';
+
 export const routes: Routes = [
 
   {
@@ -22,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'equipment/categories/create',
     component: CreateCategory
-  }
+  },
+
+  {
+  path: 'equipment/categories/edit/:id',
+  component: EditCategory
+}
 
 ];

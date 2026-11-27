@@ -88,6 +88,8 @@
               <th>Description</th>
               <th>Status</th>
               <th>Created Date</th>
+
+              <th>Actions</th>
             </tr>
           </thead>
 
@@ -129,6 +131,21 @@
                   {{ category.createdAt | date:'dd MMM yyyy' }}
                 </td>
 
+                <td>
+
+  <a
+    class="edit-button"
+    [routerLink]="[
+      '/equipment/categories/edit',
+      category.id
+    ]">
+
+    Edit
+
+  </a>
+
+</td>
+
               </tr>
 
             }
@@ -136,9 +153,9 @@
             @empty {
 
               <tr>
-                <td colspan="5" class="state-message">
-                  No equipment categories found.
-                </td>
+                <td colspan="6" class="state-message">
+  No equipment categories found.
+</td>
               </tr>
 
             }

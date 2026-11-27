@@ -187,3 +187,18 @@ table {
     flex-direction: column;
   }
 }
+.edit-button {
+  display: inline-block;
+  padding: 7px 14px;
+  border: 1px solid #bfdbfe;
+  background: #eff6ff;
+  color: #2563eb;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+
+  &:hover {
+    background: #dbeafe;
+  }
+}

@@ -3,8 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import {
+  EquipmentCategory,
   CreateEquipmentCategory,
-  EquipmentCategory
+  UpdateEquipmentCategory
 } from '../models/equipment-category.model';
 
 import { API_BASE_URL } from '../../../../core/config/api.config';
@@ -41,6 +42,18 @@ getById(id: number): Observable<EquipmentCategory> {
 
   return this.http.get<EquipmentCategory>(
     `${this.apiUrl}/${id}`
+  );
+
+}
+
+update(
+  id: number,
+  request: UpdateEquipmentCategory
+): Observable<EquipmentCategory> {
+
+  return this.http.put<EquipmentCategory>(
+    `${this.apiUrl}/${id}`,
+    request
   );
 
 }

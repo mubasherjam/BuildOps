@@ -62,4 +62,33 @@ public class EquipmentCategoriesController : ControllerBase
             new { id = result.Id },
             result);
     }
+
+    [HttpPut("{id:int}")]
+    public async Task<ActionResult<EquipmentCategoryDto>> Update(
+    int id,
+    [FromBody] UpdateEquipmentCategoryDto request,
+    CancellationToken cancellationToken)
+    {
+        var result = await _service.UpdateAsync(
+            id,
+            request,
+            cancellationToken);
+
+        if (result is null)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+
+                Title = "Category Not Found",
+
+                Detail =
+                    $"Equipment category with ID {id} was not found.",
+
+                Instance = HttpContext.Request.Path.Value
+            });
+        }
+
+        return Ok(result);
+    }
 }

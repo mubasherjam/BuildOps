@@ -21,4 +21,13 @@ public interface IEquipmentCategoryRepository
     Task<EquipmentCategory?> GetByIdAsync(
         int id,
         CancellationToken cancellationToken = default);
+
+    Task<EquipmentCategory?> GetByIdForUpdateAsync(
+    int id,
+    CancellationToken cancellationToken = default);
+
+    Task<bool> ExistsByNameExcludingIdAsync(
+        string name,
+        int id,
+        CancellationToken cancellationToken = default);
 }
