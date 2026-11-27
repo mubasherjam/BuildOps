@@ -91,4 +91,31 @@ public class EquipmentCategoriesController : ControllerBase
 
         return Ok(result);
     }
+
+    [HttpDelete("{id:int}")]
+    public async Task<IActionResult> Delete(
+    int id,
+    CancellationToken cancellationToken)
+    {
+        var deleted = await _service.DeleteAsync(
+            id,
+            cancellationToken);
+
+        if (!deleted)
+        {
+            return NotFound(new ProblemDetails
+            {
+                Status = StatusCodes.Status404NotFound,
+
+                Title = "Category Not Found",
+
+                Detail =
+                    $"Equipment category with ID {id} was not found.",
+
+                Instance = HttpContext.Request.Path.Value
+            });
+        }
+
+        return NoContent();
+    }
 }

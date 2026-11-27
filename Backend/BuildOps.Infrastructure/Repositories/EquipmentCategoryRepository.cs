@@ -51,11 +51,26 @@ public class EquipmentCategoryRepository
                 cancellationToken);
         }
         catch (DbUpdateException ex)
-            when (ex.InnerException is SqlException sqlException
-                  && sqlException.Number is 2601 or 2627)
+            when (
+                ex.InnerException is SqlException sqlException &&
+                sqlException.Number is 2601 or 2627
+            )
         {
             throw new DuplicateEquipmentCategoryException(
                 "An equipment category with this name already exists.",
+                ex);
+        }
+        catch (DbUpdateException ex)
+            when (
+                ex.InnerException is SqlException sqlException &&
+                sqlException.Number == 547 &&
+                ex.Entries.Any(entry =>
+                    entry.Entity is EquipmentCategory &&
+                    entry.State == EntityState.Deleted)
+            )
+        {
+            throw new CategoryInUseException(
+                "This category cannot be deleted because other records depend on it.",
                 ex);
         }
     }

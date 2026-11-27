@@ -124,4 +124,26 @@ public class EquipmentCategoryService
 
         return MapToDto(category);
     }
+
+    public async Task<bool> DeleteAsync(
+    int id,
+    CancellationToken cancellationToken = default)
+    {
+        var category = await _repository
+            .GetByIdForUpdateAsync(
+                id,
+                cancellationToken);
+
+        if (category is null)
+        {
+            return false;
+        }
+
+        _repository.Remove(category);
+
+        await _repository.SaveChangesAsync(
+            cancellationToken);
+
+        return true;
+    }
 }

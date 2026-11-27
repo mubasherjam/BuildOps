@@ -28,6 +28,9 @@ public class GlobalExceptionHandler : IExceptionHandler
             DuplicateEquipmentCategoryException =>
                 StatusCodes.Status409Conflict,
 
+            CategoryInUseException =>
+                StatusCodes.Status409Conflict,
+
             _ => StatusCodes.Status500InternalServerError
         };
 
@@ -42,10 +45,17 @@ public class GlobalExceptionHandler : IExceptionHandler
         {
             Status = statusCode,
 
-            Title = statusCode switch
+            Title = exception switch
             {
-                400 => "Validation Error",
-                409 => "Duplicate Category",
+                DomainValidationException =>
+                    "Validation Error",
+
+                DuplicateEquipmentCategoryException =>
+                    "Duplicate Category",
+
+                CategoryInUseException =>
+                    "Category In Use",
+
                 _ => "Internal Server Error"
             },
 
