@@ -29,4 +29,19 @@ export class EquipmentCategoryService {
       request
     );
   }
+  getAll(): Observable<EquipmentCategory[]> {
+
+  return this.http.get<EquipmentCategory[]>(
+    this.apiUrl
+  );
+
+}
+
+getById(id: number): Observable<EquipmentCategory> {
+
+  return this.http.get<EquipmentCategory>(
+    `${this.apiUrl}/${id}`
+  );
+
+}
 }

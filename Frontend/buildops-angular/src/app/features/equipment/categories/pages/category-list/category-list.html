@@ -1,0 +1,160 @@
+<div class="page-container">
+
+  <div class="page-header">
+
+    <div>
+      <h1>Equipment Categories</h1>
+      <p>Manage equipment classifications.</p>
+    </div>
+
+    <a
+      class="primary-button"
+      routerLink="/equipment/categories/create">
+      + Add Category
+    </a>
+
+  </div>
+
+  <div class="summary-grid">
+
+    <div class="summary-card">
+      <span>Total Categories</span>
+      <h2>{{ totalCategories() }}</h2>
+    </div>
+
+    <div class="summary-card active-card">
+      <span>Active Categories</span>
+      <h2>{{ activeCategories() }}</h2>
+    </div>
+
+    <div class="summary-card inactive-card">
+      <span>Inactive Categories</span>
+      <h2>{{ inactiveCategories() }}</h2>
+    </div>
+
+  </div>
+
+  <div class="table-card">
+
+    <div class="table-header">
+
+      <h2>Category List</h2>
+
+      <button
+        type="button"
+        class="refresh-button"
+        [disabled]="isLoading()"
+        (click)="loadCategories()">
+        Refresh
+      </button>
+
+    </div>
+
+    @if (isLoading()) {
+
+      <div class="state-message" role="status">
+        Loading equipment categories...
+      </div>
+
+    }
+
+    @else if (errorMessage()) {
+
+      <div class="error-message" role="alert">
+
+        <p>{{ errorMessage() }}</p>
+
+        <button
+          type="button"
+          class="refresh-button"
+          (click)="loadCategories()">
+          Try Again
+        </button>
+
+      </div>
+
+    }
+
+    @else {
+
+      <div class="table-wrapper">
+
+        <table>
+
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Category Name</th>
+              <th>Description</th>
+              <th>Status</th>
+              <th>Created Date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+
+            @for (
+              category of categories();
+              track category.id
+            ) {
+
+              <tr>
+
+                <td>{{ category.id }}</td>
+
+                <td class="category-name">
+                  {{ category.name }}
+                </td>
+
+                <td>
+                  {{ category.description || '—' }}
+                </td>
+
+                <td>
+
+                  <span
+                    class="status-badge"
+                    [class.active]="category.isActive"
+                    [class.inactive]="!category.isActive">
+
+                    {{ category.isActive
+                        ? 'Active'
+                        : 'Inactive' }}
+
+                  </span>
+
+                </td>
+
+                <td>
+                  {{ category.createdAt | date:'dd MMM yyyy' }}
+                </td>
+
+              </tr>
+
+            }
+
+            @empty {
+
+              <tr>
+                <td colspan="5" class="state-message">
+                  No equipment categories found.
+                </td>
+              </tr>
+
+            }
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+      <div class="table-footer">
+        Showing {{ totalCategories() }} categories
+      </div>
+
+    }
+
+  </div>
+
+</div>

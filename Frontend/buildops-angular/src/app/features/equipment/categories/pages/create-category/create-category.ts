@@ -2,7 +2,7 @@ import { Component, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { finalize } from 'rxjs';
-
+import { RouterLink } from '@angular/router';
 import { EquipmentCategoryService } from
   '../../services/equipment-category.service';
 
