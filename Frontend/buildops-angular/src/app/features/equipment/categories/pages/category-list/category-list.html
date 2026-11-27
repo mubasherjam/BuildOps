@@ -1,40 +1,86 @@
 <div class="page-container">
 
+  <!-- Page Header -->
+
   <div class="page-header">
 
     <div>
+
       <h1>Equipment Categories</h1>
-      <p>Manage equipment classifications.</p>
+
+      <p>
+        Manage and organize equipment classifications.
+      </p>
+
     </div>
 
     <a
-      class="primary-button"
+      class="add-button"
       routerLink="/equipment/categories/create">
+
       + Add Category
+
     </a>
 
   </div>
 
-  <div class="summary-grid">
+  <!-- Summary Cards -->
+
+  <div class="summary-cards">
 
     <div class="summary-card">
+
       <span>Total Categories</span>
+
       <h2>{{ totalCategories() }}</h2>
+
     </div>
 
     <div class="summary-card active-card">
+
       <span>Active Categories</span>
+
       <h2>{{ activeCategories() }}</h2>
+
     </div>
 
     <div class="summary-card inactive-card">
+
       <span>Inactive Categories</span>
+
       <h2>{{ inactiveCategories() }}</h2>
+
     </div>
 
   </div>
 
-  <div class="table-card">
+  <!-- Success Message -->
+
+  @if (successMessage()) {
+
+    <div class="success-message" role="status">
+
+      {{ successMessage() }}
+
+    </div>
+
+  }
+
+  <!-- Error Message -->
+
+  @if (errorMessage()) {
+
+    <div class="error-message" role="alert">
+
+      {{ errorMessage() }}
+
+    </div>
+
+  }
+
+  <!-- Table Section -->
+
+  <div class="table-container">
 
     <div class="table-header">
 
@@ -43,57 +89,80 @@
       <button
         type="button"
         class="refresh-button"
-        [disabled]="isLoading()"
+        [disabled]="
+          isLoading() ||
+          isDeleting() ||
+          selectedCategory() !== null
+        "
         (click)="loadCategories()">
-        Refresh
+
+        {{ isLoading() ? 'Loading...' : 'Refresh' }}
+
       </button>
 
     </div>
 
-    @if (isLoading()) {
+    <div class="table-responsive">
 
-      <div class="state-message" role="status">
-        Loading equipment categories...
-      </div>
+      <table>
 
-    }
+        <thead>
 
-    @else if (errorMessage()) {
+          <tr>
 
-      <div class="error-message" role="alert">
+            <th>ID</th>
 
-        <p>{{ errorMessage() }}</p>
+            <th>Category Name</th>
 
-        <button
-          type="button"
-          class="refresh-button"
-          (click)="loadCategories()">
-          Try Again
-        </button>
+            <th>Description</th>
 
-      </div>
+            <th>Status</th>
 
-    }
+            <th>Created Date</th>
 
-    @else {
+            <th>Actions</th>
 
-      <div class="table-wrapper">
+          </tr>
 
-        <table>
+        </thead>
 
-          <thead>
+        <tbody>
+
+          <!-- Loading State -->
+
+          @if (isLoading()) {
+
             <tr>
-              <th>ID</th>
-              <th>Category Name</th>
-              <th>Description</th>
-              <th>Status</th>
-              <th>Created Date</th>
 
-              <th>Actions</th>
+              <td colspan="6" class="state-message">
+
+                Loading equipment categories...
+
+              </td>
+
             </tr>
-          </thead>
 
-          <tbody>
+          }
+
+          <!-- Error State -->
+
+          @else if (errorMessage()) {
+
+            <tr>
+
+              <td colspan="6" class="state-message">
+
+                Unable to load categories.
+
+              </td>
+
+            </tr>
+
+          }
+
+          <!-- Category Records -->
+
+          @else {
 
             @for (
               category of categories();
@@ -102,14 +171,22 @@
 
               <tr>
 
-                <td>{{ category.id }}</td>
+                <td>
+
+                  {{ category.id }}
+
+                </td>
 
                 <td class="category-name">
+
                   {{ category.name }}
+
                 </td>
 
                 <td>
+
                   {{ category.description || '—' }}
+
                 </td>
 
                 <td>
@@ -119,32 +196,53 @@
                     [class.active]="category.isActive"
                     [class.inactive]="!category.isActive">
 
-                    {{ category.isActive
+                    {{
+                      category.isActive
                         ? 'Active'
-                        : 'Inactive' }}
+                        : 'Inactive'
+                    }}
 
                   </span>
 
                 </td>
 
                 <td>
-                  {{ category.createdAt | date:'dd MMM yyyy' }}
+
+                  {{
+                    category.createdAt
+                      | date:'dd MMM yyyy'
+                  }}
+
                 </td>
 
                 <td>
 
-  <a
-    class="edit-button"
-    [routerLink]="[
-      '/equipment/categories/edit',
-      category.id
-    ]">
+                  <div class="row-actions">
 
-    Edit
+                    <a
+                      class="edit-button"
+                      [routerLink]="[
+                        '/equipment/categories/edit',
+                        category.id
+                      ]">
 
-  </a>
+                      Edit
 
-</td>
+                    </a>
+
+                    <button
+                      type="button"
+                      class="delete-button"
+                      [disabled]="isDeleting()"
+                      (click)="openDeleteDialog(category)">
+
+                      Delete
+
+                    </button>
+
+                  </div>
+
+                </td>
 
               </tr>
 
@@ -153,25 +251,112 @@
             @empty {
 
               <tr>
+
                 <td colspan="6" class="state-message">
-  No equipment categories found.
-</td>
+
+                  No equipment categories found.
+
+                </td>
+
               </tr>
 
             }
 
-          </tbody>
+          }
 
-        </table>
+        </tbody>
 
-      </div>
+      </table>
 
-      <div class="table-footer">
-        Showing {{ totalCategories() }} categories
-      </div>
-
-    }
+    </div>
 
   </div>
 
 </div>
+
+<!-- Delete Confirmation Dialog -->
+
+@if (selectedCategory(); as category) {
+
+  <div class="modal-backdrop">
+
+    <div
+      class="delete-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="delete-title">
+
+      <div class="warning-icon">
+
+        !
+
+      </div>
+
+      <h2 id="delete-title">
+
+        Delete Equipment Category?
+
+      </h2>
+
+      <p>
+
+        Are you sure you want to permanently delete
+        the category
+
+        <strong>{{ category.name }}</strong>?
+
+      </p>
+
+      <p class="warning-text">
+
+        This action cannot be undone.
+
+      </p>
+
+      <!-- Delete Error Message -->
+
+      @if (deleteError()) {
+
+        <div class="delete-error" role="alert">
+
+          {{ deleteError() }}
+
+        </div>
+
+      }
+
+      <!-- Dialog Buttons -->
+
+      <div class="dialog-actions">
+
+        <button
+          type="button"
+          class="cancel-button"
+          [disabled]="isDeleting()"
+          (click)="closeDeleteDialog()">
+
+          Cancel
+
+        </button>
+
+        <button
+          type="button"
+          class="confirm-delete-button"
+          [disabled]="isDeleting()"
+          (click)="confirmDelete()">
+
+          {{
+            isDeleting()
+              ? 'Deleting...'
+              : 'Delete Category'
+          }}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+}
